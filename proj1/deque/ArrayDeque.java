@@ -27,7 +27,7 @@ public class ArrayDeque<T> {
     }
 
     /*
-     * for test
+     * public int capacity for test
      */
     public int capacity() {
         return capacity;
@@ -63,7 +63,7 @@ public class ArrayDeque<T> {
         }
     }
 
-    T removeFirst() {
+    public T removeFirst() {
         T data = array[head];
         array[head] = null;
         head = (head + 1) % capacity;
@@ -75,7 +75,7 @@ public class ArrayDeque<T> {
         return data;
     }
 
-    T removeLast() {
+    public T removeLast() {
         tail = (tail - 1 + capacity) % capacity;
         T data = array[tail];
         array[tail] = null;
@@ -85,5 +85,9 @@ public class ArrayDeque<T> {
             resize(capacity / 2);
         }
         return data;
+    }
+
+    public T get(int index) {
+        return array[(head + index) % capacity];
     }
 }
