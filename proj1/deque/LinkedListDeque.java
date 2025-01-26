@@ -1,8 +1,9 @@
 package deque;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Iterable<T> {
     private static class Node<T> {
         T data;
         Node<T> next;
@@ -74,11 +75,30 @@ public class LinkedListDeque<T> {
     }
 
     public T get(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        }
          Node<T> node = head.next;
          for (int i = 0; i < index && node != tail; i++) {
              node = node.next;
          }
          return node.data;
+    }
+
+    private T getRecursiveHelper(Node<T> node, int index) {
+        if (index == 0) {
+            return node.data;
+        } else {
+            return getRecursiveHelper(node.next, index - 1);
+        }
+    }
+
+    public T getRecursive(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        } else {
+            return getRecursiveHelper(head, index);
+        }
     }
 
     public void printDeque() {
@@ -88,5 +108,50 @@ public class LinkedListDeque<T> {
             current = current.next;
         }
         System.out.println();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof LinkedListDeque)) {
+            return false;
+        }
+        if (size() != ((LinkedListDeque<?>) o).size()) {
+            return false;
+        }
+        LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+        Node<T> p = head.next;
+        Node<T> q = other.head.next;
+        while (p != tail && q != other.tail) {
+            if (p.data != q.data) {
+                return false;
+            }
+            p = p.next;
+            q = q.next;
+        }
+        return true;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new LinkedListIterator();
+    }
+
+    private class LinkedListIterator implements Iterator<T> {
+        private Node<T> current = head.next;
+
+        @Override
+        public boolean hasNext() {
+            return current != tail;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T item = current.data;
+            current = current.next;
+            return item;
+        }
     }
 }

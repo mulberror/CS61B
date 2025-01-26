@@ -1,6 +1,10 @@
 package deque;
 
 import org.junit.Test;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.*;
 
 
@@ -125,5 +129,170 @@ public class LinkedListDequeTest {
         for (double i = 999999; i > 500000; i--) {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
+    }
+
+    // 测试空队列的迭代器
+    @Test
+    public void testEmptyDequeIterator() {
+        LinkedListDeque<Integer> deque = new LinkedListDeque<>();
+        Iterator<Integer> iterator = deque.iterator();
+        assertFalse("Empty deque iterator should have no elements", iterator.hasNext());
+
+        try {
+            iterator.next();
+            // 如果没有抛出异常，标记测试失败
+            fail("Expected NoSuchElementException");
+        } catch (NoSuchElementException e) {
+            // 成功捕获预期异常，测试通过
+        }
+    }
+
+    // 测试迭代顺序正确性（混合 addFirst/addLast）
+    @Test
+    public void testIteratorOrder() {
+        LinkedListDeque<String> deque = new LinkedListDeque<>();
+        deque.addFirst("A");  // Deque: [A]
+        deque.addLast("B");   // Deque: [A, B]
+        deque.addFirst("C");  // Deque: [C, A, B]
+
+        Iterator<String> iterator = deque.iterator();
+        assertTrue(iterator.hasNext());
+        assertEquals("First element should be C", "C", iterator.next());
+        assertEquals("Second element should be A", "A", iterator.next());
+        assertEquals("Third element should be B", "B", iterator.next());
+        assertFalse("Iterator should have no more elements", iterator.hasNext());
+    }
+
+    // 测试迭代器遍历所有元素
+    @Test
+    public void testFullTraversal() {
+        LinkedListDeque<Integer> deque = new LinkedListDeque<>();
+        // 添加 5 个元素
+        for (int i = 0; i < 5; i++) {
+            deque.addLast(i);
+        }
+
+        int expected = 0;
+        for (int num : deque) {  // 使用 for-each 隐式调用迭代器
+            System.err.println(num);
+            assertEquals("Element should match sequential order", expected++, num);
+        }
+        assertEquals("Should iterate through all 5 elements", 5, expected);
+    }
+
+    // 测试不支持 remove 操作
+    @Test(expected = UnsupportedOperationException.class)
+    public void testIteratorRemoveNotSupported() {
+        LinkedListDeque<String> deque = new LinkedListDeque<>();
+        deque.addLast("test");
+        Iterator<String> iterator = deque.iterator();
+        iterator.next();
+        iterator.remove();  // 应抛出异常
+    }
+
+    // 测试多个独立迭代器
+    @Test
+    public void testMultipleIterators() {
+        LinkedListDeque<Character> deque = new LinkedListDeque<>();
+        deque.addLast('X');
+        deque.addLast('Y');
+
+        Iterator<Character> it1 = deque.iterator();
+        Iterator<Character> it2 = deque.iterator();
+
+        assertEquals("Both iterators should start at same element", it1.next(), it2.next());
+        assertTrue("Both iterators should have next", it1.hasNext() && it2.hasNext());
+    }
+
+    // 测试相同引用的相等性
+    @Test
+    public void testReflexivity() {
+        LinkedListDeque<Integer> deque = new LinkedListDeque<>();
+        deque.addLast(1);
+        deque.addLast(2);
+        assertTrue("Deque should equal itself", deque.equals(deque));
+    }
+
+    // 测试与 null 比较
+    @Test
+    public void testEqualsNull() {
+        LinkedListDeque<String> deque = new LinkedListDeque<>();
+        deque.addLast("test");
+        assertFalse("Deque should not equal null", deque.equals(null));
+    }
+
+    // 测试与非 LinkedListDeque 对象比较
+    @Test
+    public void testDifferentClass() {
+        LinkedListDeque<Integer> deque = new LinkedListDeque<>();
+        deque.addLast(5);
+        assertFalse("Deque should not equal a different class", deque.equals("5"));
+    }
+
+    // 测试大小不同的队列
+    @Test
+    public void testDifferentSize() {
+        LinkedListDeque<Integer> deque1 = new LinkedListDeque<>();
+        deque1.addLast(1);
+        LinkedListDeque<Integer> deque2 = new LinkedListDeque<>();
+        deque2.addLast(1);
+        deque2.addLast(2);
+        assertFalse("Deques with different sizes should not be equal", deque1.equals(deque2));
+    }
+
+    // 测试元素顺序不同的队列
+    @Test
+    public void testDifferentOrder() {
+        LinkedListDeque<Integer> deque1 = new LinkedListDeque<>();
+        deque1.addLast(1);
+        deque1.addLast(2);
+        LinkedListDeque<Integer> deque2 = new LinkedListDeque<>();
+        deque2.addLast(2);
+        deque2.addLast(1);
+        assertFalse("Deques with different element order should not be equal", deque1.equals(deque2));
+    }
+
+    // 测试元素内容不同的队列
+    @Test
+    public void testDifferentElements() {
+        LinkedListDeque<String> deque1 = new LinkedListDeque<>();
+        deque1.addLast("A");
+        LinkedListDeque<String> deque2 = new LinkedListDeque<>();
+        deque2.addLast("B");
+        assertFalse("Deques with different elements should not be equal", deque1.equals(deque2));
+    }
+
+    // 测试完全相同元素的队列
+    @Test
+    public void testEqualDeques() {
+        LinkedListDeque<Integer> deque1 = new LinkedListDeque<>();
+        deque1.addLast(10);
+        deque1.addLast(20);
+        LinkedListDeque<Integer> deque2 = new LinkedListDeque<>();
+        deque2.addLast(10);
+        deque2.addLast(20);
+        assertTrue("Deques with same elements should be equal", deque1.equals(deque2));
+    }
+
+    // 测试包含 null 元素的队列
+    @Test
+    public void testNullElements() {
+        LinkedListDeque<String> deque1 = new LinkedListDeque<>();
+        deque1.addLast(null);
+        LinkedListDeque<String> deque2 = new LinkedListDeque<>();
+        deque2.addLast(null);
+        assertTrue("Deques with null elements should be equal", deque1.equals(deque2));
+    }
+
+    // 测试混合 null 和非 null 元素
+    @Test
+    public void testMixedNullElements() {
+        LinkedListDeque<String> deque1 = new LinkedListDeque<>();
+        deque1.addLast("A");
+        deque1.addLast(null);
+        LinkedListDeque<String> deque2 = new LinkedListDeque<>();
+        deque2.addLast("A");
+        deque2.addLast(null);
+        assertTrue("Deques with mixed null and non-null elements should be equal", deque1.equals(deque2));
     }
 }

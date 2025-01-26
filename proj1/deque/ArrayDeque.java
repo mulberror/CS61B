@@ -1,6 +1,9 @@
 package deque;
 
-public class ArrayDeque<T> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class ArrayDeque<T> implements Iterable<T> {
     private T[] array;
 
     private int head = 0, tail = 0;
@@ -95,5 +98,46 @@ public class ArrayDeque<T> {
 
     public T get(int index) {
         return array[(head + index) % capacity];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ArrayDeque)) {
+            return false;
+        }
+        if (size() != ((ArrayDeque<?>) o).size()) {
+            return false;
+        }
+        ArrayDeque<?> other = (ArrayDeque<?>) o;
+        for (int i = 0; i < size(); i++) {
+            if (get(i) != other.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
+    }
+
+    private class ArrayDequeIterator implements Iterator<T> {
+        private int current = head;
+
+        @Override
+        public boolean hasNext() {
+            return current != tail;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T item = array[current];
+            current = (current + 1) % capacity;
+            return item;
+        }
     }
 }
