@@ -64,6 +64,9 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
+        if (isEmpty()) {
+            return null;
+        }
         T data = array[head];
         array[head] = null;
         head = (head + 1) % capacity;
@@ -76,6 +79,9 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
+        if (isEmpty()) {
+            return null;
+        }
         tail = (tail - 1 + capacity) % capacity;
         T data = array[tail];
         array[tail] = null;
