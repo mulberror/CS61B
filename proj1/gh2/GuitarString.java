@@ -1,9 +1,9 @@
 package gh2;
 
 // DONE: uncomment the following import once you're ready to start this portion
- import deque.ArrayDeque;
- import deque.Deque;
- import deque.LinkedListDeque;
+import deque.ArrayDeque;
+import deque.Deque;
+
 // DONE: maybe more imports
 
 /*
@@ -20,7 +20,7 @@ public class GuitarString {
 
     /* Buffer for storing sound data. */
     // DONE: uncomment the following line once you're ready to start this portion
-     private Deque<Double> buffer;
+    private Deque<Double> buffer;
 
     /* Create a guitar string of the given frequency.  */
     public GuitarString(double frequency) {

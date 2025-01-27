@@ -25,17 +25,6 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         capacity = newCapacity;
     }
 
-    public boolean isEmpty() {
-        return head == tail;
-    }
-
-    /*
-     * public int capacity for test
-     */
-    public int capacity() {
-        return capacity;
-    }
-
     public int size() {
         return size;
     }
@@ -102,15 +91,22 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ArrayDeque)) {
+        if (!(o instanceof Deque)) {
             return false;
         }
-        if (size() != ((ArrayDeque<?>) o).size()) {
+        if (size() != ((Deque<?>) o).size()) {
             return false;
         }
-        ArrayDeque<?> other = (ArrayDeque<?>) o;
-        for (int i = 0; i < size(); i++) {
-            if (get(i) != other.get(i)) {
+        for (int i = 0; i < size(); i++) { // Time Complexity high
+            T left = (T) ((Deque<?>) o).get(i);
+            T right = get(i);
+            if (left == null && right == null) {
+                continue;
+            }
+            if (left == null || right == null) {
+                return false;
+            }
+            if (!(left.equals(right))) {
                 return false;
             }
         }

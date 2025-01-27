@@ -28,10 +28,6 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         size = 0;
     }
 
-    public boolean isEmpty() {
-        return head.next == tail && tail.prev == head;
-    }
-
     public int size() {
         return size;
     }
@@ -76,11 +72,11 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         if (index < 0 || index >= size) {
             return null;
         }
-         Node<T> node = head.next;
-         for (int i = 0; i < index && node != tail; i++) {
-             node = node.next;
-         }
-         return node.data;
+        Node<T> node = head.next;
+        for (int i = 0; i < index && node != tail; i++) {
+            node = node.next;
+        }
+        return node.data;
     }
 
     private T getRecursiveHelper(Node<T> node, int index) {
@@ -94,7 +90,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         if (index < 0 || index >= size) {
             return null;
         }
-        return getRecursiveHelper(head, index);
+        return getRecursiveHelper(head.next, index);
     }
 
     public void printDeque() {
@@ -108,21 +104,24 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof LinkedListDeque)) {
+        if (!(o instanceof Deque)) {
             return false;
         }
-        if (size() != ((LinkedListDeque<?>) o).size()) {
+        if (size() != ((Deque<?>) o).size()) {
             return false;
         }
-        LinkedListDeque<T> other = (LinkedListDeque<T>) o;
-        Node<T> p = head.next;
-        Node<T> q = other.head.next;
-        while (p != tail && q != other.tail) {
-            if (p.data != q.data) {
+        for (int i = 0; i < size(); i++) { // Time Complexity high
+            T left = (T) ((Deque<?>) o).get(i);
+            T right = get(i);
+            if (left == null && right == null) {
+                continue;
+            }
+            if (left == null || right == null) {
                 return false;
             }
-            p = p.next;
-            q = q.next;
+            if (!(left.equals(right))) {
+                return false;
+            }
         }
         return true;
     }
