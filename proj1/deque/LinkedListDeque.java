@@ -51,27 +51,25 @@ public class LinkedListDeque<T> implements Iterable<T> {
     }
 
     public T removeFirst() {
-        if (!isEmpty()) {
-            Node<T> deleteNode = head.next;
-            head.next = deleteNode.next;
-            deleteNode.next.prev = head;
-            size--;
-            return deleteNode.data;
-        } else {
+        if (isEmpty()) {
             return null;
         }
+        Node<T> deleteNode = head.next;
+        head.next = deleteNode.next;
+        deleteNode.next.prev = head;
+        size--;
+        return deleteNode.data;
     }
 
     public T removeLast() {
-        if (!isEmpty()) {
-            Node<T> deleteNode = tail.prev;
-            tail.prev = deleteNode.prev;
-            deleteNode.prev.next = tail;
-            size--;
-            return deleteNode.data;
-        } else {
+        if (isEmpty()) {
             return null;
         }
+        Node<T> deleteNode = tail.prev;
+        tail.prev = deleteNode.prev;
+        deleteNode.prev.next = tail;
+        size--;
+        return deleteNode.data;
     }
 
     public T get(int index) {
@@ -88,17 +86,15 @@ public class LinkedListDeque<T> implements Iterable<T> {
     private T getRecursiveHelper(Node<T> node, int index) {
         if (index == 0) {
             return node.data;
-        } else {
-            return getRecursiveHelper(node.next, index - 1);
         }
+        return getRecursiveHelper(node.next, index - 1);
     }
 
     public T getRecursive(int index) {
         if (index < 0 || index >= size) {
             return null;
-        } else {
-            return getRecursiveHelper(head, index);
         }
+        return getRecursiveHelper(head, index);
     }
 
     public void printDeque() {
