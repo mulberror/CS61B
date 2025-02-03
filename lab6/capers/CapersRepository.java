@@ -1,7 +1,7 @@
 package capers;
 
 import java.io.File;
-import static capers.Utils.*;
+import java.io.IOException;
 
 /** A repository for Capers 
  * @author mulberror
@@ -19,7 +19,8 @@ public class CapersRepository {
 
     /** Main metadata folder. */
     static final File CAPERS_FOLDER = Utils.join(".capers"); // TODO Hint: look at the `join`
-                                            //      function in Utils
+    static final File STORY_FILE = Utils.join(".capers", "story");
+
     /**
      * Does required filesystem operations to allow for persistence.
      * (creates any necessary folders or files)
@@ -30,10 +31,24 @@ public class CapersRepository {
      *    - story -- file containing the current story
      */
     public static void setupPersistence() {
-        // TODO
-        CAPERS_FOLDER.mkdir();
-        File dogsDir = Utils.join(CAPERS_FOLDER, "dogs");
-        dogsDir.mkdir();
+        if (!CAPERS_FOLDER.exists()) {
+            try {
+                if (!CAPERS_FOLDER.mkdir()) {
+                    System.err.println("Failed to create folder " + CAPERS_FOLDER.getAbsolutePath());
+                }
+            } catch (SecurityException ignored) {
+
+            }
+        }
+        if (!STORY_FILE.exists()) {
+            try {
+                if (!STORY_FILE.createNewFile()) {
+                    System.err.println("Failed to create file " + STORY_FILE.getAbsolutePath());
+                }
+            } catch (SecurityException | IOException ignored) {
+
+            }
+        }
     }
 
     /**
@@ -42,14 +57,10 @@ public class CapersRepository {
      * @param text String of the text to be appended to the story
      */
     public static void writeStory(String text) {
-        File storyFile = Utils.join(CAPERS_FOLDER, "story");
-        String story = "";
-        if (storyFile.exists()) {
-            story = Utils.readContentsAsString(storyFile);
-        }
-        story += text + "\n";
-        Utils.writeContents(storyFile, story.getBytes());
-        System.out.print(story);
+        String storyContent = Utils.readContentsAsString(STORY_FILE);
+        storyContent += text + "\n";
+        Utils.writeContents(STORY_FILE, storyContent);
+        System.out.println(storyContent);
     }
 
     /**
@@ -58,7 +69,7 @@ public class CapersRepository {
      * Also prints out the dog's information using toString().
      */
     public static void makeDog(String name, String breed, int age) {
-        Dog dog = new Dog(name, breed, age);
+
     }
 
     /**
