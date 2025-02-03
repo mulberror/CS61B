@@ -63,10 +63,6 @@ public class Dog implements Serializable { //
     public void saveDog() {
         // (hint: don't forget dog names are unique)
         File dogObjectFile = new File(DOG_FOLDER, name);
-        if (dogObjectFile.exists()) {
-            System.out.println("already exist a same name dog\n");
-            return;
-        }
         writeObject(dogObjectFile, this);
     }
 
