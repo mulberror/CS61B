@@ -20,6 +20,7 @@ public class CapersRepository {
     /** Main metadata folder. */
     static final File CAPERS_FOLDER = Utils.join(".capers"); // TODO Hint: look at the `join`
     static final File STORY_FILE = Utils.join(".capers", "story");
+    static final File DOGS_FOLDER = Utils.join(".capers", "dogs");
 
     /**
      * Does required filesystem operations to allow for persistence.
@@ -37,7 +38,6 @@ public class CapersRepository {
                     System.err.println("Failed to create folder " + CAPERS_FOLDER.getAbsolutePath());
                 }
             } catch (SecurityException ignored) {
-
             }
         }
         if (!STORY_FILE.exists()) {
@@ -46,7 +46,14 @@ public class CapersRepository {
                     System.err.println("Failed to create file " + STORY_FILE.getAbsolutePath());
                 }
             } catch (SecurityException | IOException ignored) {
-
+            }
+        }
+        if (!DOGS_FOLDER.exists()) {
+            try {
+                if (!DOGS_FOLDER.mkdir()) {
+                    System.err.println("Failed to create folder " + DOGS_FOLDER.getAbsolutePath());
+                }
+            } catch (SecurityException ignored) {
             }
         }
     }
@@ -69,7 +76,9 @@ public class CapersRepository {
      * Also prints out the dog's information using toString().
      */
     public static void makeDog(String name, String breed, int age) {
-
+        Dog newDog = new Dog(name, breed, age);
+        newDog.saveDog();
+        System.out.println(newDog.toString());
     }
 
     /**
@@ -79,6 +88,6 @@ public class CapersRepository {
      * @param name String name of the Dog whose birthday we're celebrating.
      */
     public static void celebrateBirthday(String name) {
-        // TODO
+
     }
 }
